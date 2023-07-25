@@ -1,0 +1,312 @@
+<?php
+include 'conexion.php';
+include_once 'includes/register.inc.php';
+include_once 'includes/functions.php';
+include_once 'includes/db_connect.php';
+include_once 'includes/psl-config.php';
+
+sec_session_start();
+	 if (!isset($_SESSION['usuario'])) 
+	 {
+	 	header("Location: index.php");
+        exit();
+	 }
+   $id=base64_decode($_GET['1d']);
+
+$query="call pa_obtiene_personas('".$id."')";
+if (mysqli_multi_query($conexionp, $query)) {
+        do {
+            /* store first result set */
+            if ($result = mysqli_store_result($conexionp)) {
+                while ($row = mysqli_fetch_row($result)) {
+                    $ci_per=$row[0];
+                    $nom_per=$row[1];
+                    $apeP_per=$row[2];
+                    $apeM_per=$row[3];
+                    $email_per=$row[4];
+                    $int_per=$row[5];
+                    $ruta_per=$row[6];
+                    $id_cargo=$row[7];
+                    $nom_cargo=$row[8];
+                    $nom_ofi_cargo=$row[10];
+                    $id_region=$row[11];
+                    $ext_region=$row[12];
+                }
+                mysqli_free_result($result);
+                }
+    
+        } while (mysqli_next_result($conexionp));
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Modificacion de Datos Persona</title>
+
+    <!-- Bootstrap -->
+    <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="vendors/nprogress/nprogress.css" rel="stylesheet">
+     <script type="text/JavaScript" src="js/sha512.js"></script> 
+        <script type="text/JavaScript" src="js/forms.js"></script>
+    <!-- Custom Theme Style -->
+    <link href="build/css/custom.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <!-- Bootstrap_file_input -->
+    <link href="css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/fileinput.min.js" type="text/javascript"></script>
+    <!-- Datatables -->
+<link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css"
+	rel="stylesheet">
+<script language="JavaScript">
+function confirmar ( mensaje ) {
+  return confirm( mensaje );
+} 
+</script>
+<script>
+	function cerrarse(){
+		window.close()
+	}
+</script>
+  </head>
+
+  <body class="nav-md">
+  	<?php
+        if (!empty($error_msg)) {
+            echo $error_msg;
+        }
+        ?>
+    <div class="container body">
+      <div class="main_container">
+       
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Modificación datos de Persona</h3>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Modificación <small>datos de personas</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                     
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <form class="form-horizontal form-label-left" novalidate action="control/actualizaPersona.php" enctype="multipart/form-data" method="post">
+
+                     
+                      <span class="section">Informaci&oacute;n personal</span>
+
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombre">Nombre(s) <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="nombre" class="form-control col-md-7 col-xs-12"  name="nombre" placeholder="ingrese lo(s) nombre(s)" required="required" type="text" value="<?php echo $nom_per;?>">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apPaterno">Apellido Paterno <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="apPaterno" class="form-control col-md-7 col-xs-12" data-validate-length-range="2"  name="apPaterno" placeholder="Ingrese apellido paterno" type="text" value="<?php echo $apeP_per;?>">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apMaterno">Apellido Materno <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="apMaterno" class="form-control col-md-7 col-xs-12" data-validate-length-range="2"  name="apMaterno" placeholder="Ingrese apellido materno" type="text" value="<?php echo $apeM_per;?>">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cim">C.I. <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="cim" name="cim" disabled class="form-control col-md-7 col-xs-12" value="<?php echo $ci_per;?>">
+                          <input type="hidden" name="id" value="<?php echo $ci_per;?>">
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">Departamento <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <select id="dpto" name="dpto" class="form-control" required>
+                           <option value="<?php echo $id_region;?>"><?php echo $ext_region;?></option>
+                            <?php
+                             $query = "select id_dep,ext_dep from departamentos";                     
+                                if (mysqli_multi_query($conexionj, $query)) {
+                                    do {
+                                        /* store first result set */
+                                        if ($result = mysqli_store_result($conexionj)) {
+                                            while ($row = mysqli_fetch_row($result)) {
+                                                echo $row[0]." ".$row[1];
+                                                echo "<option value=".$row[0].">".$row[1]."</option>";
+                                            }
+                                            mysqli_free_result($result);
+                                        }
+                                
+                                    } while (mysqli_next_result($conexionj));
+                                }
+                                
+                            ?>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">Cargo <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <select id="cargo" name="cargo" class="form-control" required>
+                            <option value="<?php echo $id_cargo;?>"><?php echo $nom_ofi_cargo;?></option>
+                            <?php
+                           
+                             $query = "select c.id,concat(o.descripcion,' - ',c.descripcion) from cargos c join areas a on c.idArea=a.id join oficinas o on a.idOficina=o.id where c.id not in (select idCargo from personas where idCargo is not null)";                      
+                                if (mysqli_multi_query($conexionp, $query)) {
+                                    do {
+                                        /* store first result set */
+                                        if ($result = mysqli_store_result($conexionp)) {
+                                            while ($row = mysqli_fetch_row($result)) {
+                                                echo $row[0]." ".$row[1];
+                                                echo "<option value=".$row[0].">".$row[1]."</option>";
+                                            }
+                                            mysqli_free_result($result);
+                                        }
+                                
+                                    } while (mysqli_next_result($conexionp));
+                                }
+                                                 
+                            ?>
+                 
+                          </select>
+                        </div>
+                      </div>
+                      <div class="item form-group" id="resadm" >
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foto">Fotografía
+                            </label>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <input id="foto" name="foto" type="file" class="file" data-preview-file-type="any" accept="image/*"  >
+                            </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="email" id="email" name="email" class="form-control col-md-7 col-xs-12" value="<?php echo $email_per;?>">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Nro. de Interno
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" id="interno" name="interno" class="form-control col-md-7 col-xs-12" value="<?php echo $int_per;?>">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                      
+                 
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                           <input type="submit" class="btn btn-success" value="Guardar"  />
+						  <input type="reset" value="Cancelar" class="btn btn-primary" onclick="cerrarse()">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div> <!--final formulario-->
+                      
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+ 
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="vendors/nprogress/nprogress.js"></script>
+    <!-- validator -->
+    <script src="vendors/validator/validator.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="build/js/custom.min.js"></script>
+
+    <!-- validator -->
+    <script>
+      // initialize the validator function
+      validator.message.date = 'not a real date';
+
+      // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+      $('form')
+        .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+        .on('change', 'select.required', validator.checkField)
+        .on('keypress', 'input[required][pattern]', validator.keypress);
+
+      $('.multi.required').on('keyup blur', 'input', function() {
+        validator.checkField.apply($(this).siblings().last()[0]);
+      });
+
+      $('form').submit(function(e) {
+        e.preventDefault();
+        var submit = true;
+
+        // evaluate the form using generic validaing
+        if (!validator.checkAll($(this))) {
+          submit = false;
+        }
+
+        if (submit)
+          this.submit();
+
+        return false;
+      });
+    </script>
+    <!-- /validator -->
+    
+   
+  </body>
+</html>
