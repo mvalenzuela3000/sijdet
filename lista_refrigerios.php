@@ -1,17 +1,17 @@
 <?php
 
 include_once 'includes/funj.php';
-include_once 'PDFACREDITADOS.php';
+include_once 'PDFREFRIGERIOS.php';
 $gestion = $_POST["gestion"];
 $rango = $_POST["inscrito"];
-$valores = items_gestion($gestion);
-$terminos = inscritosyacreditados($gestion, $rango);
-function contaracreditados($terminos)
+$valores = array('18/10/2023 (M)','18/10/2023 (T)','19/10/2023 (M)','19/10/2023 (T)','20/10/2023 (M)','20/10/2023 (T)');
+$terminos = inscritosyrefrigerios($gestion, $rango);
+function contararefrigerios($terminos,$item)
 {
 	$cont = 0;
 	for ($j = 0; $j < count($terminos); $j++) {
 		$t = explode('*', $terminos[$j]);
-		if ($t[2] == 1) {
+		if ($t[$item] == 'X') {
 			$cont++;
 		}
 	}
@@ -25,8 +25,8 @@ $numregistros = count($terminos);
 $divide = ceil($numregistros / 15);
 if ($numregistros == 0) {
 	$pdf->AddPage();
-	$pdf->SetFont('Arial', 'B', 10);
-	$pdf->Cell(50, 10, 'TOTAL ACREDITADOS:   ' . contaracreditados($terminos), 0, 0, 'R');
+	$pdf->SetFont('Arial', 'B', 8);
+	$pdf->Cell(250, 10, 'TOTAL REFRIGERIOS ENTREGADOS: 18/10/2023 (M): ' . contararefrigerios($terminos,2).' 18/10/2023 (T): ' . contararefrigerios($terminos,3).' 19/10/2023 (M): ' . contararefrigerios($terminos,4).' 19/10/2023 (T): ' . contararefrigerios($terminos,5).' 20/10/2023 (M): ' . contararefrigerios($terminos,6).' 20/10/2023 (T): ' . contararefrigerios($terminos,7), 0, 0, 'R');
 } else {
 	$control = 1;
 	$rfin = 0;
@@ -62,8 +62,8 @@ if ($numregistros == 0) {
 		}
 		$control++;
 	}
-	$pdf->Cell(50, 10, 'TOTAL ACREDITADOS:   ' . contaracreditados($terminos), 0, 0, 'R');
+	$pdf->Cell(250, 10, 'TOTAL REFRIGERIOS ENTREGADOS: 18/10/2023 (M): ' . contararefrigerios($terminos,2).' 18/10/2023 (T): ' . contararefrigerios($terminos,3).' 19/10/2023 (M): ' . contararefrigerios($terminos,4).' 19/10/2023 (T): ' . contararefrigerios($terminos,5).' 20/10/2023 (M): ' . contararefrigerios($terminos,6).' 20/10/2023 (T): ' . contararefrigerios($terminos,7), 0, 0, 'R');
 }
 
-$nom = "ListaAcreditados" . $gestion . ".pdf";
+$nom = "ListaEntregaRefrigerios" . $gestion . ".pdf";
 $pdf->Output($nom, 'D');

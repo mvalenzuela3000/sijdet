@@ -1,16 +1,36 @@
 <?php
-include 'conexion.php';
 include_once 'includes/register.inc.php';
 include_once 'includes/functions.php';
 include_once 'includes/db_connect.php';
-include_once 'includes/psl-config.php';
-
+//include_once 'conexion.php';
+include_once 'includes/funj.php';
+;
 sec_session_start();
-	 if (!isset($_SESSION['usuario'])) 
+	 if (!isset($_SESSION['usuario'],$_SESSION['cargo'])) 
 	 {
 	 	header("Location: index.php");
         exit();
 	 }
+	 
+	/* $val=verifica_gestion_activa(date("Y"));
+	 if($val==0){
+	 	?>
+	 		<script>
+	 			alert("La gestión correspondiente a la Jornada no ha sido iniciada o ha sido cerrada, por favor verifique.");
+            	location.href = "FormInicio.php";
+	 		</script>
+	 	<?php
+	 	exit;
+	 }
+	 elseif ($val==2) {
+		 ?>
+	 		<script>
+	 			alert("La gestión correspondiente a la Jornada o ha sido cerrada, por favor verifique.");
+            	location.href = "FormInicio.php";
+	 		</script>
+	 	<?php
+	 	exit;
+	 }*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,35 +41,21 @@ sec_session_start();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>AIT | Registro de Instituciones</title>
+    <title>AIT | Listados refrigerios</title>
 
     <!-- Bootstrap -->
     <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+     <!-- bootstrap-daterangepicker -->
+    <link href="vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <!-- NProgress -->
     <link href="vendors/nprogress/nprogress.css" rel="stylesheet">
-     <script type="text/JavaScript" src="js/sha512.js"></script> 
-        <script type="text/JavaScript" src="js/forms.js"></script>
+
     <!-- Custom Theme Style -->
     <link href="build/css/custom.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="images/favicon.ico">
-    <!-- Datatables -->
-<link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css"
-	rel="stylesheet">
-	<script language="JavaScript">
+    <script language="JavaScript">
 		function confirmar () {
   			return confirm("Está seguro que eliminará el registro?");
 		} 
@@ -67,7 +73,7 @@ sec_session_start();
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="FormInstitucion.php" class="site_title"> <span>Registro de Instituciones</span></a>
+              <a href="FormListaRefrigerios.php" class="site_title"> <span>Reportes de Entrega Refrigerios</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -130,7 +136,7 @@ sec_session_start();
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Registro de Instituciones</h3>
+                <h3>Listados de Entrega Refrigerios</h3>
               </div>
 
             
@@ -141,7 +147,7 @@ sec_session_start();
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Registro<small>instituciones</small></h2>
+                    <h2>Listados<small>de Entrega de Refrigerios por gestión</small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -153,103 +159,66 @@ sec_session_start();
                   </div>
                   <div class="x_content">
 
-                    <form class="form-horizontal form-label-left" novalidate action="control/registraInstitucion.php" method="post" name="registration_form">
+                    <form class="form-horizontal form-label-left" novalidate action="lista_refrigerios.php" method="post" name="listado_acredita">
 
-                     
-                      <span class="section">Nombre</span>
-
-                      <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nombre Institución <span class="required">*</span>
+					  <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Seleccione la Gestión <span class="required">*</span>
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="name" class="form-control col-md-7 col-xs-12"  name="name" placeholder="ingrese el nombre de la institución" required="required" type="text">
+                        <div class="col-md-2 col-sm-6 col-xs-12">
+                        	<select id="gestion" name="gestion" class="form-control" required="required">
+                          <?php
+                          	for($i=date("Y");$i>=2017;$i--)
+							{
+								echo "<option value=".$i.">".$i."</option>";
+							}
+                          ?>
+                         </select>
                         </div>
                       </div>
+                      <div class="item form-group">
+                      	<label class="control-label col-md-3 col-sm-3 col-xs-12">Seleccione el Rango <span class="required">*</span>
+                        </label>	
+							<div class="col-md-1 col-md-sm-6 col-xs-12">
+								<label>
+									Externos: <input type="radio"  name="inscrito" id="externos"  value="0" />
+								</label>
+                            </div>
+							
+                  			<div class="col-md-1 col-sm-6 col-xs-12">
+                    			<label>
+	                        		Func. AIT: <input type="radio"  name="inscrito" id="funcait"  value="4" />
+	                        	</label>
+                  			</div>
+                  			<div class="col-md-1 col-sm-6 col-xs-12">
+                    			<label>
+	                        		Expositores y  Aut.: <input type="radio"  name="inscrito" id="expyaut"  value="5" />
+	                        	</label>
+                  			</div>
+                 		</div>
+
                       
+                 
                       <div class="ln_solid"></div>
                       <div class="form-group">
                         <div class="col-md-6 col-md-offset-3">
                           <button type="reset"class="btn btn-primary">Cancelar</button>
-                          <input type="submit" class="btn btn-success" value="Registrar"  />
+                          <input type="submit" class="btn btn-success" value="Generar"  />
                         </div>
                       </div>
                     </form>
-                  </div>
-                </div>
-              </div> <!--final formulario-->
+                  </div> <!--x-content-->
+                  
+                  
+                </div> <!--x_panel-->
+              </div> <!-- class="col-md-12 col-sm-12 col-xs-12" -->
               
-               <!--tablas-->
-              
-                <div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="x_panel">
-						<div class="x_title">
-							<h2>
-								Instituciones <small>Listado de instituciones registradas</small>
-							</h2>
-							<ul class="nav navbar-right panel_toolbox">
-								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-								</li>
-								<li><a class="close-link"><i class="fa fa-close"></i></a></li>
-							</ul>
-							<div class="clearfix"></div>
-						</div>
-						<div class="x_content">
-							<p class="text-muted font-13 m-b-30">Puede buscar por cualquier
-								criterio de las columnas ingresando el mismo en el cuadro
-								Buscar y, a partir de ello generar listados con los botones
-								ubicados en la parte superior de la tabla.</p>
-							<table id="datatable-buttons"
-								class="table table-striped table-bordered">
-								<thead>
-									<tr>
-										<th>Nombre</th>	
-										<th>Acciones</th>	
-									</tr>
-								</thead>
-								<tbody>
-                      <?php 
-               
-                    //$conex = mysqli_connect(HOSTU, USERU, PASSWORDU, DATABASEU);
-                      $query = "CALL pa_obtiene_institucion()";
-                      
-                      if (mysqli_multi_query($conexionj, $query)) {
-                          do {
-                              /* store first result set */
-                              if ($result = mysqli_store_result($conexionj)) {
-                                  while ($row = mysqli_fetch_row($result)) {
-									
-									echo "<tr>
-                                            <td>".$row[1]."</td>";
-                                        
-                                            echo"<td><a class=\"btn btn-danger btn-xs\" href=\"control/eliminaInstitucion.php?1d='".base64_encode($row[0])."'\" onclick=\"return confirmar();\"> Eliminar</a> 	
-                                            </td>
-                                            
-                                       </tr> ";
-                                  }
-                                  mysqli_free_result($result);
-                              }
-                      
-                          } while (mysqli_next_result($conexionj));
-                      }
-                      
-                      /* close connection */
-                      mysqli_close($conexionj);
-                      
-                      ?>
-
-		                      	</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
+             
               
               
-              <!--fin tablas-->
               
-              
-            </div>
-          </div>
-        </div>
+            </div>  <!--row-->
+          </div>    <!--""-->
+        </div> <!--rightcol role main-->
         <!-- /page content -->
 
  <!-- Small modal -->
@@ -321,29 +290,10 @@ sec_session_start();
 
     <!-- Custom Theme Scripts -->
     <script src="build/js/custom.min.js"></script>
-<!-- Datatables -->
-	<script src="js/jquery.dataTables.min.js"></script>
-	<script src="vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-	<script
-		src="vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-	<script
-		src="vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-	<script src="js/buttons.flash.min.js"></script>
-	<script src="js/buttons.html5.min.js"></script>
-	<script src="vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-	<script
-		src="vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-	<script
-		src="vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-	<script
-		src="vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-	<script
-		src="vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-	<script
-		src="vendors/datatables.net-scroller/js/datatables.scroller.min.js"></script>
-	<script src="vendors/jszip/dist/jszip.min.js"></script>
-	<script src="vendors/pdfmake/build/pdfmake.min.js"></script>
-	<script src="vendors/pdfmake/build/vfs_fonts.js"></script>
+     <!-- bootstrap-daterangepicker -->
+    <script src="vendors/moment/min/moment.min.js"></script>
+    <script src="vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
     <!-- validator -->
     <script>
       // initialize the validator function
@@ -375,85 +325,27 @@ sec_session_start();
       });
     </script>
     <!-- /validator -->
-    
+     <!-- bootstrap-daterangepicker -->
     <script>
       $(document).ready(function() {
-        var handleDataTableButtons = function() {
-          if ($("#datatable-buttons").length) {
-            $("#datatable-buttons").DataTable({
-              dom: "Bfrtip",
-              buttons: [
-                {
-                  extend: "copy",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "csv",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "excel",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "pdfHtml5",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "print",
-                  className: "btn-sm"
-                },
-              ],
-              responsive: true
-            });
-          }
-        };
-
-        TableManageButtons = function() {
-          "use strict";
-          return {
-            init: function() {
-              handleDataTableButtons();
-            }
-          };
-        }();
-
-        $('#datatable').dataTable();
-
-        $('#datatable-keytable').DataTable({
-          keys: true
+        $('#fechaini').daterangepicker({
+          singleDatePicker: true,
+          calender_style: "picker_1"
+        }, function(start, end, label) {
+          console.log(start.toISOString(), end.toISOString(), label);
         });
-
-        $('#datatable-responsive').DataTable();
-
-        $('#datatable-scroller').DataTable({
-          ajax: "js/datatables/json/scroller-demo.json",
-          deferRender: true,
-          scrollY: 380,
-          scrollCollapse: true,
-          scroller: true
-        });
-
-        $('#datatable-fixed-header').DataTable({
-          fixedHeader: true
-        });
-
-        var $datatable = $('#datatable-checkbox');
-
-        $datatable.dataTable({
-          'order': [[ 1, 'asc' ]],
-          'columnDefs': [
-            { orderable: false, targets: [0] }
-          ]
-        });
-        $datatable.on('draw.dt', function() {
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_flat-green'
-          });
-        });
-
-        TableManageButtons.init();
       });
     </script>
+    <script>
+      $(document).ready(function() {
+        $('#fechafin').daterangepicker({
+          singleDatePicker: true,
+          calender_style: "picker_1"
+        }, function(start, end, label) {
+          console.log(start.toISOString(), end.toISOString(), label);
+        });
+      });
+    </script>
+    <!-- /bootstrap-daterangepicker -->
   </body>
 </html>

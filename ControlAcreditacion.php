@@ -169,7 +169,7 @@ $estado=base64_decode($_GET['e']);
 					<source type="audio/mp3" src="registroCorrecto.mp3">
 					</audio>
 					<audio id="audio1" controls>
-					<source type="audio/mp3" src="intente.mp3">
+					<source type="audio/mp3" src="acreditado.mp3">
 					</audio>
                       <?php
              				if($estado ==1){

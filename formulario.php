@@ -10,6 +10,7 @@
 	$valores=valores($ci,$cod);
 	$terminos=terminos($ci,$cod);
 	$correlativo=obtiene_correlativo_formulario($ci,$cod);
+	$titulo=nombreeventoxcixcod($ci,$cod);
 	function valida_correlativo($correlativo)
 	{
 		if($correlativo<10){
@@ -37,6 +38,7 @@
 	//$pdf->Cell(15, 6, '10, 10', 0 , 1); 
 	$pdf->CellFitSpace(50,20,'Nro. '.valida_correlativo($correlativo),0,0,'C'); 
 	$pdf->Ln(15);
+	$pdf->titulo=$titulo;
 	$pdf->Image('images/logoXjornadas.png',10,10,17,25);
 	$pdf->Image('images/AIT-VERTICAL.jpg',175,10,25,25);
 	$pdf->SetFont('Arial','B',12);

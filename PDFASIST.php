@@ -3,6 +3,7 @@ require('fpdf/fpdf.php');
  
 class PDF extends FPDF
 {
+    public $titulo;
     function cabeceraHorizontal()
     {
         $this->SetXY(60, 60);
@@ -233,7 +234,7 @@ class PDF extends FPDF
 		$this->Ln(5);
 		$this->SetFont('Arial','I',10);
 		$this->Cell(40);
-	 	$this->CellFitSpace(120,20,utf8_decode('XII Jornadas Bolivianas de Derecho Tributario 2019'),0,0,'C');
+	 	$this->CellFitSpace(120,20,utf8_decode('JORNADAS BOLIVIANAS DE DERECHO TRIBUTARIO'),0,0,'C');
 	    // Salto de línea salta 20 lineas
 	    $this->Ln(10);
 	 

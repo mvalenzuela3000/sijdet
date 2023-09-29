@@ -513,7 +513,7 @@ if($_POST["tipodep"]==0)
 							$mail = new PHPMailer();
 							$mail->IsSMTP();
 							$mail->SMTPDebug  = 0;
-							$mail->Host       = 'smtp.gmail.com';
+							$mail->Host       = 'mail.ait.gob.bo';
 							$mail->SMTPAuth   = true;
 							$mail->Username   = USERMAILJ;
 							$mail->Password   = PASSMAILJ;

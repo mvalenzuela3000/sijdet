@@ -119,7 +119,7 @@ if ($_POST["action"] == "upload") {
 				$colB=$objPHPExcel->getActiveSheet()->getCell('B1')->getCalculatedValue();
 				$colC=$objPHPExcel->getActiveSheet()->getCell('C1')->getCalculatedValue();
 				$colD=$objPHPExcel->getActiveSheet()->getCell('D1')->getCalculatedValue();
-				IF($colA=='FECHA' && $colB=='DOCUMENTO' && $colC=='DEPOSITANTE' && $colD=='MONTO')
+				if($colA=='FECHA' && $colB=='DOCUMENTO' && $colC=='DEPOSITANTE' && $colD=='MONTO')
 				{
 					
 				}
@@ -241,7 +241,7 @@ if ($_POST["action"] == "upload") {
 													"<br><br><strong>Contraseña: $pass</strong><br><br>";
 											$mail->IsSMTP();
 											$mail->SMTPDebug  = 0;
-											$mail->Host       = 'smtp.gmail.com';
+											$mail->Host       = 'mail.ait.gob.bo';
 											$mail->SMTPAuth   = true;
 											$mail->Username   = USERMAILJ;
 											$mail->Password   = PASSMAILJ;
@@ -344,7 +344,7 @@ if ($_POST["action"] == "upload") {
 										      
 												$mail->IsSMTP();
 												$mail->SMTPDebug  = 0;
-												$mail->Host       = 'smtp.gmail.com';
+												$mail->Host       = 'mail.ait.gob.bo';
 												$mail->SMTPAuth   = true;
 												$mail->Username   = USERMAILJ;
 												$mail->Password   = PASSMAILJ;
@@ -454,7 +454,7 @@ if ($_POST["action"] == "upload") {
 													"<br><br><strong>Contraseña: $pass</strong><br><br>";
 											$mail->IsSMTP();
 											$mail->SMTPDebug  = 0;
-											$mail->Host       = 'smtp.gmail.com';
+											$mail->Host       = 'mail.ait.gob.bo';
 											$mail->SMTPAuth   = true;
 											$mail->Username   = USERMAILJ;
 											$mail->Password   = PASSMAILJ;
@@ -557,7 +557,7 @@ if ($_POST["action"] == "upload") {
 													"<br><br><strong>Contraseña: $pass</strong><br><br>";
 												$mail->IsSMTP();
 												$mail->SMTPDebug  = 0;
-												$mail->Host       = 'smtp.gmail.com';
+												$mail->Host       = 'mail.ait.gob.bo';
 												$mail->SMTPAuth   = true;
 												$mail->Username   = USERMAILJ;
 												$mail->Password   = PASSMAILJ;

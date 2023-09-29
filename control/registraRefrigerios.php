@@ -16,7 +16,7 @@ date_default_timezone_set('America/La_Paz');
 	if($ci!=null)
 	{
 		$e=0;
-		$query="call pa_registra_acreditacion('".$id."','".$usuario."')";
+		$query="call pa_registra_refrigerios('".$id."','".$usuario."')";
 		
 		if (mysqli_multi_query($conexionj, $query)) {
 	      do {
@@ -31,24 +31,29 @@ date_default_timezone_set('America/La_Paz');
 		  {
 		  	$date = base64_encode(date("H:i:s"));
 			$e=base64_encode(1);
-			header("Location:../ControlAcreditacion.php?id=$ci&d=$date&e=$e");
+			header("Location:../ControlRefrigerio.php?id=$ci&d=$date&e=$e");
 		  }
 		  elseif ($e==2)
 		  {
 			  $e=base64_encode(0);
-				  $date=base64_encode("Error, el C.i. ya realizó su acreditación.");
-        		 header("Location:../ControlAcreditacion.php?id=$ci&d=$date&e=$e");
+				  $date=base64_encode("Error, el C.i. ya recibió su refrigerio.");
+        		 header("Location:../ControlRefrigerio.php?id=$ci&d=$date&e=$e");
 		  }
 		  elseif ($e==0) {
 			  $e=base64_encode(0);
 				  $date=base64_encode("Error, el C.i. no está inscrito.");
-        		 header("Location:../ControlAcreditacion.php?id=$ci&d=$date&e=$e");
+        		 header("Location:../ControlRefrigerio.php?id=$ci&d=$date&e=$e");
 		  }
+          elseif ($e==3) {
+            $e=base64_encode(0);
+                $date=base64_encode("Error, el C.i. ya recibió sus dos refrigerios.");
+               header("Location:../ControlRefrigerio.php?id=$ci&d=$date&e=$e");
+            }
 	  	}
 		else {
 			$e=base64_encode(0);
 				  $date=base64_encode("Error, No se pudo ejecutar la consulta.");
-        		 header("Location:../ControlAcreditacion.php?id=$ci&d=$date&e=$e");
+        		 header("Location:../ControlRefrigerio.php?id=$ci&d=$date&e=$e");
 		}
 		
 	}
@@ -56,6 +61,6 @@ date_default_timezone_set('America/La_Paz');
 	{
          $e=base64_encode(0);
          $date=base64_encode(".");
-          header("Location:../ControlAcreditacion.php?id=$ci&d=$date&e=$e");
+          header("Location:../ControlRefrigerio.php?id=$ci&d=$date&e=$e");
 	}
 ?>

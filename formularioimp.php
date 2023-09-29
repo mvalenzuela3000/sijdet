@@ -42,6 +42,7 @@
 	$valores=valores($ci,$cod);
 	$terminos=terminos($ci,$cod);
 	$correlativo=obtiene_correlativo_formulario($ci,$cod);
+	$titulo=nombreeventoxcixcod($ci,$cod);
 	//$sesinscritas=sesionesxinscrito($ci);
 	//$pdf = new PDF();
 	$pdf = new PDF('P','mm','Letter');
@@ -49,6 +50,7 @@
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
 	$pdf->SetXY(80, 15);
+	$pdf->titulo=$titulo;
 	//$pdf->Cell(15, 6, '10, 10', 0 , 1); 
 	$pdf->CellFitSpace(50,20,'Nro. '.valida_correlativo($correlativo),0,0,'C'); 
 	$pdf->Ln(13);

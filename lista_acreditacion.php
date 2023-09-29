@@ -7,8 +7,8 @@
 	$valores=items_gestion($gestion);
 	$terminos=inscritosxletra($gestion,$rango);
 
-
 	$pdf = new PDF('L','mm','Letter');
+	$pdf->titulo=nombreevento($gestion);
 	$pdf->AliasNbPages();
 	
 	$numregistros=count($terminos);

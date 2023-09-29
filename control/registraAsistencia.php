@@ -1,4 +1,5 @@
 <?php
+	date_default_timezone_set('America/La_Paz');
 	include_once '../conexion.php';
 	$tci=$_POST["id"];
 	$tempci=explode('.',$tci);

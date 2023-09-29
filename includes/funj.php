@@ -327,8 +327,10 @@
 			?>
 				<script>
 					alert("El registro no fue encontrado por favor revise su enlace o conexión con internet.")
+					window.history.back();
 				</script>
 			<?php
+			exit;
 		}
 		return $valores;
 	}
@@ -354,6 +356,7 @@
 					alert("El registro no fue encontrado por favor revise su enlace o conexión con internet.")
 				</script>
 			<?php
+			exit;
 		}
 		return $valores;
 	}
@@ -379,6 +382,7 @@
 					alert("El registro no fue encontrado por favor revise su enlace o conexión con internet.")
 				</script>
 			<?php
+			exit;
 		}
 		return $valores;
 	}
@@ -782,6 +786,40 @@
 				</script>
 			<?php	
 			exit;
+		}
+		return $valores;
+	}
+	function nombreeventoxcixcod($ci,$cod)
+	{
+		$conexionj=conexj();
+		$query2="select gestion from inscritos where ci='".$ci."' and cod_inscripcion='".$cod."'";
+		$resultado= $conexionj->query($query2);
+		$fila2 = $resultado->fetch_array();
+		$valor=$fila2[0];
+		return nombreevento($valor);
+	}
+	function inscritosyrefrigerios($gestion,$rango)
+	{
+		$conexionj=conexj();
+		$query="call pa_obtiene_inscritos_refrigerios($gestion,$rango)";
+		$valores=array();
+		 if (mysqli_multi_query($conexionj, $query)) {
+	          do {
+	              if ($result = mysqli_store_result($conexionj)) {
+	                  while ($row = mysqli_fetch_row($result)) {
+	                  		$valores[]=$row[0].'*'.$row[1].'*'.$row[2].'*'.$row[3].'*'.$row[4].'*'.$row[5].'*'.$row[6].'*'.$row[7];     
+	                  }
+	                  mysqli_free_result($result);
+	              }
+	      
+	          } while (mysqli_next_result($conexionj));
+	      }
+		else {
+			?>
+				<script>
+					alert("El registro no fue encontrado por favor revise su enlace o conexión con internet.")
+				</script>
+			<?php
 		}
 		return $valores;
 	}

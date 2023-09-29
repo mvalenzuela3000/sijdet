@@ -228,7 +228,7 @@ $gestion=date("Y");
                               /* store first result set */
                               if ($result = mysqli_store_result($conex)) {
                                   while ($row = mysqli_fetch_row($result)) {
-									$eliminar='<a class="btn btn-danger btn-xs" href="control/eliminaRegDeposito.php?1d='.base64_encode($row[0]).'&g3s='.base64_encode($row{8}).'" onClick="return confirmar();">Eliminar</a>'; 
+									$eliminar='<a class="btn btn-danger btn-xs" href="control/eliminaRegDeposito.php?1d='.base64_encode($row[0]).'&g3s='.base64_encode($row[8]).'" onClick="return confirmar();">Eliminar</a>'; 
 									echo "<tr>
                                             <td>".$row[0]."</td>
                                             <td><span style='display: none;'>'".$row[1]."'</span>".$row[2]."</td>

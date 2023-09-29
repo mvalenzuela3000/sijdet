@@ -15,7 +15,7 @@ class PDF extends FPDF
 		$this->CellFitSpace(8,7, 'Nro',0, 0 , 'C');
 		$ejeX = $ejeX + 8;
 		$this->RoundedRect($ejeX, 30, 80, 7, 2, 'FD');
-		$this->CellFitSpace(80,7, 'APELLIDOS Y NOMBRES',0, 0 , 'C');
+		$this->CellFitSpace(80,7, 'NOMBRES Y APELLIDOS',0, 0 , 'C');
 		$ejeX = $ejeX + 80;
 		$this->RoundedRect($ejeX, 30, 20, 7, 2, 'FD');
 		$this->CellFitSpace(20,7, 'C.I.',0, 0 , 'C');
@@ -75,10 +75,15 @@ class PDF extends FPDF
         $this->SetTextColor(3, 3, 3); //Color del texto: Negro
         $ejeY = 37; //Aquí se encuentra la primer CellFitSpace e irá incrementando
         $cont=$inicio+1;
-
 		$num=count($cabecera);
 		$tam=100/$num;
-       
+        $prir=0;
+        $segr=0;
+        $terr=0;
+        $cuar=0;
+        $quir=0;
+        $sexr=0;
+        $total=0;
         for($j=$inicio;$j<$fin;$j++)
 		{
 			$t=explode('*', $datos[$j]);
@@ -87,15 +92,50 @@ class PDF extends FPDF
             $this->CellFitSpace(8,10, $cont,0, 0 , 'C' );
             $this->CellFitSpace(80,10, $t[0],'LR', 0 , 'L' );
             $this->CellFitSpace(20,10, $t[1],0, 0 , 'L' );
-			
- 			for($i=0;$i<$num;$i++)
+            for($i=0;$i<$num;$i++)
 			{
-				 $this->CellFitSpace($tam,10, '','LR', 0 , 'L' );
+				 $this->CellFitSpace($tam,10, $t[$i+2],'LR', 0 , 'L' );
+                 if($t[$i+2]=='X'){
+                    if($i==0)
+                        {$prir++;
+                            $total++;
+                        }
+                    if($i==1)
+                        {$segr++;
+                            $total++;
+                        }
+                    if($i==2)
+                        {$terr++;
+                            $total++;
+                        }
+                    if($i==3)
+                        {$cuar++;
+                            $total++;
+                        }
+                    if($i==4)
+                        {$quir++;
+                            $total++;
+                        }
+                    if($i==5)
+                        {$sexr++;
+                            $total++;
+                        }
+                 }
 			}
+            $this->CellFitSpace(50,7, 'Registro mediante sistema.',0, 0 , 'C');
             $this->Ln();
 			$cont++;
             $ejeY = $ejeY + 10;
 		}
+        $this->SetFont('Arial','B',10);
+        $this->CellFitSpace(108,10, 'TOTALES',0, 0 , 'C' );
+        $this->CellFitSpace($tam,10, $prir,0, 0 , 'R' );
+        $this->CellFitSpace($tam,10, $segr,0, 0 , 'R' );
+        $this->CellFitSpace($tam,10, $terr,0, 0 , 'R' );
+        $this->CellFitSpace($tam,10, $cuar,0, 0 , 'R' );
+        $this->CellFitSpace($tam,10, $quir,0, 0 , 'R' );
+        $this->CellFitSpace($tam,10, $sexr,0, 0 , 'R' );
+        $this->CellFitSpace(50,10, 'Total Gral: '.$total,0, 0 , 'R');
     }
  	function datosVertical($datos)
     {
@@ -269,7 +309,7 @@ class PDF extends FPDF
 	function Header()
  
 	{
-        
+	   
 	       // seteamos el tipo de letra Arial Negrita 16
 	    $this->SetFont('Arial','B',12);
 	 
@@ -281,7 +321,7 @@ class PDF extends FPDF
 		$this->Ln(5);
 		$this->SetFont('Arial','I',10);
 		$this->Cell(70);
-	 	$this->CellFitSpace(120,20,utf8_decode($this->titulo),0,0,'C');
+        $this->CellFitSpace(120,20,utf8_decode($this->titulo),0,0,'C');
 	    // Salto de línea salta 20 lineas
 	    $this->Ln(10);
 	 

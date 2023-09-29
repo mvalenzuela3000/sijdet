@@ -1,9 +1,8 @@
 <?php
-include 'conexion.php';
 include_once 'includes/register.inc.php';
 include_once 'includes/functions.php';
 include_once 'includes/db_connect.php';
-include_once 'includes/psl-config.php';
+include_once 'conexion.php';
 
 sec_session_start();
 	 if (!isset($_SESSION['usuario'])) 
@@ -11,6 +10,16 @@ sec_session_start();
 	 	header("Location: index.php");
         exit();
 	 }
+	 $id="";
+$fecha="";
+$resultado="";
+$estado=-1;
+  
+ if (isset($_GET['id'])){
+$id=base64_decode($_GET['id']);
+$fecha=base64_decode($_GET['d']);	
+$estado=base64_decode($_GET['e']);
+ }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +30,7 @@ sec_session_start();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>AIT | Registro de Instituciones</title>
+    <title>AIT | Control Refrigerios</title>
 
     <!-- Bootstrap -->
     <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -31,29 +40,22 @@ sec_session_start();
     <link href="vendors/nprogress/nprogress.css" rel="stylesheet">
      <script type="text/JavaScript" src="js/sha512.js"></script> 
         <script type="text/JavaScript" src="js/forms.js"></script>
+            <!-- PNotify -->
+    <link href="vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="build/css/custom.min.css" rel="stylesheet">
+
     <link rel="shortcut icon" href="images/favicon.ico">
-    <!-- Datatables -->
-<link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css"
-	rel="stylesheet">
-	<script language="JavaScript">
-		function confirmar () {
-  			return confirm("Está seguro que eliminará el registro?");
-		} 
-	</script>
+	<style type="text/css">
+		#audio{
+		display: none
+		}
+		#audio1{
+		display: none
+		}
+	</style>
   </head>
 
   <body class="nav-md">
@@ -67,7 +69,7 @@ sec_session_start();
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="FormInstitucion.php" class="site_title"> <span>Registro de Instituciones</span></a>
+              <a href="ControlAcreditacion.php" class="site_title"> <span>Control de Refrigerios</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -130,7 +132,7 @@ sec_session_start();
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Registro de Instituciones</h3>
+                <h3>Registro de entrega de Refrigerios</h3>
               </div>
 
             
@@ -141,7 +143,7 @@ sec_session_start();
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Registro<small>instituciones</small></h2>
+                   
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -153,100 +155,75 @@ sec_session_start();
                   </div>
                   <div class="x_content">
 
-                    <form class="form-horizontal form-label-left" novalidate action="control/registraInstitucion.php" method="post" name="registration_form">
-
-                     
-                      <span class="section">Nombre</span>
-
+  <span class="section" id="liveclock"></span>
+                    <form class="form-horizontal form-label-left" action="control/registraRefrigerios.php" method="post" >             
+						
                       <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nombre Institución <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id">Ingrese ID <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="name" class="form-control col-md-7 col-xs-12"  name="name" placeholder="ingrese el nombre de la institución" required="required" type="text">
+                          <input id="id" class="form-control col-md-7 col-xs-12"  name="id" placeholder="ingrese el ID del usuario" required="required" type="text" autofocus>
                         </div>
                       </div>
-                      
+					  <audio id="audio" controls>
+					<source type="audio/mp3" src="registroCorrecto.mp3">
+					</audio>
+					<audio id="audio1" controls>
+					<source type="audio/mp3" src="refrigerio.mp3">
+					</audio>
+                      <?php
+             				if($estado ==1){
+             					echo'<div class="alert alert-success alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <strong>Refrigerio entregado</strong> ID: '.$id.' Hora: '.$fecha.'
+                  </div>';
+								?>
+									<script>
+										var audio = document.getElementById("audio");
+										audio.play();
+									</script>
+								<?php
+             				}
+							elseif ($estado==0) {
+								echo'	<div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <strong>'.$fecha.'</strong>
+                  </div>';
+								?>
+									<script>
+										var audio = document.getElementById("audio1");
+										audio1.play();
+									</script>
+								<?php
+							}
+							elseif ($estado==2) {
+								echo'	<div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <strong>'.$fecha.'</strong>
+                  </div>';
+								?>
+									<script>
+										var audio = document.getElementById("audio1");
+										audio1.play();
+									</script>
+								<?php
+							}
+                         ?>
                       <div class="ln_solid"></div>
                       <div class="form-group">
                         <div class="col-md-6 col-md-offset-3">
-                          <button type="reset"class="btn btn-primary">Cancelar</button>
+                      
                           <input type="submit" class="btn btn-success" value="Registrar"  />
                         </div>
                       </div>
                     </form>
+					
                   </div>
                 </div>
-              </div> <!--final formulario-->
-              
-               <!--tablas-->
-              
-                <div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="x_panel">
-						<div class="x_title">
-							<h2>
-								Instituciones <small>Listado de instituciones registradas</small>
-							</h2>
-							<ul class="nav navbar-right panel_toolbox">
-								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-								</li>
-								<li><a class="close-link"><i class="fa fa-close"></i></a></li>
-							</ul>
-							<div class="clearfix"></div>
-						</div>
-						<div class="x_content">
-							<p class="text-muted font-13 m-b-30">Puede buscar por cualquier
-								criterio de las columnas ingresando el mismo en el cuadro
-								Buscar y, a partir de ello generar listados con los botones
-								ubicados en la parte superior de la tabla.</p>
-							<table id="datatable-buttons"
-								class="table table-striped table-bordered">
-								<thead>
-									<tr>
-										<th>Nombre</th>	
-										<th>Acciones</th>	
-									</tr>
-								</thead>
-								<tbody>
-                      <?php 
-               
-                    //$conex = mysqli_connect(HOSTU, USERU, PASSWORDU, DATABASEU);
-                      $query = "CALL pa_obtiene_institucion()";
-                      
-                      if (mysqli_multi_query($conexionj, $query)) {
-                          do {
-                              /* store first result set */
-                              if ($result = mysqli_store_result($conexionj)) {
-                                  while ($row = mysqli_fetch_row($result)) {
-									
-									echo "<tr>
-                                            <td>".$row[1]."</td>";
-                                        
-                                            echo"<td><a class=\"btn btn-danger btn-xs\" href=\"control/eliminaInstitucion.php?1d='".base64_encode($row[0])."'\" onclick=\"return confirmar();\"> Eliminar</a> 	
-                                            </td>
-                                            
-                                       </tr> ";
-                                  }
-                                  mysqli_free_result($result);
-                              }
-                      
-                          } while (mysqli_next_result($conexionj));
-                      }
-                      
-                      /* close connection */
-                      mysqli_close($conexionj);
-                      
-                      ?>
-
-		                      	</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-              
-              
-              <!--fin tablas-->
-              
-              
+              </div>
             </div>
           </div>
         </div>
@@ -308,6 +285,8 @@ sec_session_start();
       </div>
     </div>
 
+
+
     <!-- jQuery -->
     <script src="vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
@@ -321,29 +300,10 @@ sec_session_start();
 
     <!-- Custom Theme Scripts -->
     <script src="build/js/custom.min.js"></script>
-<!-- Datatables -->
-	<script src="js/jquery.dataTables.min.js"></script>
-	<script src="vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-	<script
-		src="vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-	<script
-		src="vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-	<script src="js/buttons.flash.min.js"></script>
-	<script src="js/buttons.html5.min.js"></script>
-	<script src="vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-	<script
-		src="vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-	<script
-		src="vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-	<script
-		src="vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-	<script
-		src="vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-	<script
-		src="vendors/datatables.net-scroller/js/datatables.scroller.min.js"></script>
-	<script src="vendors/jszip/dist/jszip.min.js"></script>
-	<script src="vendors/pdfmake/build/pdfmake.min.js"></script>
-	<script src="vendors/pdfmake/build/vfs_fonts.js"></script>
+ <!-- PNotify -->
+    <script src="vendors/pnotify/dist/pnotify.js"></script>
+    <script src="vendors/pnotify/dist/pnotify.buttons.js"></script>
+    <script src="vendors/pnotify/dist/pnotify.nonblock.js"></script>
     <!-- validator -->
     <script>
       // initialize the validator function
@@ -375,85 +335,5 @@ sec_session_start();
       });
     </script>
     <!-- /validator -->
-    
-    <script>
-      $(document).ready(function() {
-        var handleDataTableButtons = function() {
-          if ($("#datatable-buttons").length) {
-            $("#datatable-buttons").DataTable({
-              dom: "Bfrtip",
-              buttons: [
-                {
-                  extend: "copy",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "csv",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "excel",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "pdfHtml5",
-                  className: "btn-sm"
-                },
-                {
-                  extend: "print",
-                  className: "btn-sm"
-                },
-              ],
-              responsive: true
-            });
-          }
-        };
-
-        TableManageButtons = function() {
-          "use strict";
-          return {
-            init: function() {
-              handleDataTableButtons();
-            }
-          };
-        }();
-
-        $('#datatable').dataTable();
-
-        $('#datatable-keytable').DataTable({
-          keys: true
-        });
-
-        $('#datatable-responsive').DataTable();
-
-        $('#datatable-scroller').DataTable({
-          ajax: "js/datatables/json/scroller-demo.json",
-          deferRender: true,
-          scrollY: 380,
-          scrollCollapse: true,
-          scroller: true
-        });
-
-        $('#datatable-fixed-header').DataTable({
-          fixedHeader: true
-        });
-
-        var $datatable = $('#datatable-checkbox');
-
-        $datatable.dataTable({
-          'order': [[ 1, 'asc' ]],
-          'columnDefs': [
-            { orderable: false, targets: [0] }
-          ]
-        });
-        $datatable.on('draw.dt', function() {
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_flat-green'
-          });
-        });
-
-        TableManageButtons.init();
-      });
-    </script>
   </body>
 </html>

@@ -94,7 +94,7 @@
 					// 2 = client and server messages
 					$mail->SMTPDebug  = 0;
 					//Ahora definimos gmail como servidor que aloja nuestro SMTP
-					$mail->Host       = 'smtp.gmail.com';
+					$mail->Host       = 'mail.ait.gob.bo';
 					//Tenemos que usar gmail autenticados, así que esto a TRUE
 					$mail->SMTPAuth   = true;
 					//Definimos la cuenta que vamos a usar. Dirección completa de la misma

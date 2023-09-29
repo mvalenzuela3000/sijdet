@@ -30,8 +30,9 @@
 		{
 			?>
 			<script language="javascript">
-				history.back(-1);
 				alert("Por favor revise que el tamaño de la Resolución Administrativa sea inferior a 2 MB.");
+				history.back(-1);
+				
 			</script>
 			<?php
 			exit ;

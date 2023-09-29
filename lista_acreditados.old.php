@@ -21,7 +21,7 @@
 
 	$pdf = new PDF('L','mm','Letter');
 	$pdf->AliasNbPages();
-	
+	$pdf->titulo=nombreevento($gestion);
 	$numregistros=count($terminos);
 	$divide=ceil($numregistros/15);
 	

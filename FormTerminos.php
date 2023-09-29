@@ -71,6 +71,7 @@ sec_session_start();
     					dataType:'json',
     					data:{ pais:$('#pais').val()}
     				}).done(function(respuesta){
+              var condicion=respuesta;
     					$("#textTerminos").val(respuesta.terminos);
     					
     				});
@@ -184,7 +185,7 @@ sec_session_start();
 	            		<label class="control-label col-md-3 col-sm-3 col-xs-12" for="terminos">Seleccione tipo de inscripción <span class="required">*</span>
 	            		</label>
 	            		<div class="col-md-3 col-sm-6 col-xs-12">
-	              			<select id="pais" name="pais" class="form-control" required="required" onChange="habilitarp(this.form)">
+	              			<select id="pais" name="pais" class="form-control" required="required">
 	                			<option value="">Seleccione..</option>
 			                      <?php
 										
