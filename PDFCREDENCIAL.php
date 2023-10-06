@@ -3,173 +3,126 @@ require('fpdf/fpdf.php');
  
 class PDF extends FPDF
 {
-    public $titulo;
+    function designUp($espejo = 0){
+        $this->Rect( (10 + $espejo), 10, 90, 128); //Marco exterior
+        $this->Image('images/credencialjornadas.png', (12 + $espejo), 11, 86 ,126);
+    }
+ 
+    function designDown($espejo = 0){
+        $this->Rect((10 + $espejo), 140, 90, 128); //Marco exterior
+        $this->Image('images/credencialjornadas.png', (12 + $espejo), 141, 86 , 126);
+    }
+
     function cabeceraHorizontal($cabecera)
     {
-        $this->SetXY(10, 30);
-        $this->SetFont('Arial','B',8);
+        $this->SetXY(10, 10);
+        $this->SetFont('Arial','B',10);
         $this->SetFillColor(2,157,116);//Fondo verde de celda
         $this->SetTextColor(240, 255, 240); //Letra color blanco
         $ejeX = 10;
-		$this->RoundedRect($ejeX, 30, 8, 7, 2, 'FD');
-		$this->CellFitSpace(8,7, 'Nro',0, 0 , 'C');
-		$ejeX = $ejeX + 8;
-		$this->RoundedRect($ejeX, 30, 80, 7, 2, 'FD');
-		$this->CellFitSpace(80,7, 'NOMBRES Y APELLIDOS',0, 0 , 'C');
-		$ejeX = $ejeX + 80;
-		$this->RoundedRect($ejeX, 30, 20, 7, 2, 'FD');
-		$this->CellFitSpace(20,7, 'C.I.',0, 0 , 'C');
-		$ejeX = $ejeX + 20;
-		$num=count($cabecera);
-		$tam=100/$num;
-		$this->SetFont('Arial','B',6);
         foreach($cabecera as $fila)
         {
-            $this->RoundedRect($ejeX, 30, $tam, 7, 2, 'FD');
-            $this->CellFitSpace($tam,7, utf8_decode($fila),0, 0 , 'C');
-            $ejeX = $ejeX + $tam;
+            $this->RoundedRect($ejeX, 10, 40, 7, 2, 'FD');
+            $this->CellFitSpace(40,7, utf8_decode($fila),0, 0 , 'C');
+            $ejeX = $ejeX + 40;
         }
-		$this->SetFont('Arial','B',8);
-		$this->RoundedRect($ejeX, 30, 50, 7, 2, 'FD');
-		$this->CellFitSpace(50,7, 'FIRMA',0, 0 , 'C');
-		$ejeX = $ejeX + 50;
     }
 	function cabeceraVertical($cabecera)
 	{
-		$this->SetXY(20, 60);
-        $this->SetFont('Arial','B',10);
+		$this->SetXY(20, 50);
+        $this->SetFont('Arial','B',8);
 		 $this->SetFillColor(80,160,8);//Fondo verde de celda
         $this->SetTextColor(255, 255, 255); //Letra color blanco
 		
         $ejeX = 20;
-		$ejeY=60;
+		$ejeY=50;
         foreach($cabecera as $columna)
         {
-        	$this->RoundedRect($ejeX, $ejeY, 50, 7, 2, 'FD');
-        	$this->CellFitSpace(50,7, utf8_decode($columna),0, 2 , 'L' );
-			$ejeY=$ejeY+7;
+        	$this->RoundedRect($ejeX, $ejeY, 50, 6, 2, 'FD');
+        	$this->CellFitSpace(50,6, utf8_decode($columna),0, 2 , 'L' );
+			$ejeY=$ejeY+6;
 		}
 	}
 	function cabeceraVertical2($cabecera)
 	{
-		$this->SetXY(20, 135);
-        $this->SetFont('Arial','B',10);
+		$this->SetXY(20, 115);
+        $this->SetFont('Arial','B',8);
 		$this->SetFillColor(80,160,8);//Fondo verde de celda
         $this->SetTextColor(255, 255, 255); //Letra color blanco
      	 $ejeX = 20;
-		$ejeY=135;
+		$ejeY=115;
         foreach($cabecera as $columna)
         {
             //Parámetro con valor 2, hace que la cabecera sea vertical
-            $this->RoundedRect($ejeX, $ejeY, 50, 7, 2, 'FD');
-			$this->CellFitSpace(50,7, utf8_decode($columna),0, 2 , 'L'); //
-			$ejeY=$ejeY+7;
+            $this->RoundedRect($ejeX, $ejeY, 50, 6, 2, 'FD');
+			$this->CellFitSpace(200,6, utf8_decode($columna),0, 2 , 'L'); //
+			$ejeY=$ejeY+6;
         }
 	}
  
-    function datosHorizontal($datos,$cabecera,$inicio,$fin)
+    function datosHorizontal($datos)
     {
-        $this->SetXY(10,37);
+        $this->SetXY(10,17);
         $this->SetFont('Arial','',8);
         $this->SetFillColor(229, 229, 229); //Gris tenue de cada fila
         $this->SetTextColor(3, 3, 3); //Color del texto: Negro
-        $ejeY = 37; //Aquí se encuentra la primer CellFitSpace e irá incrementando
-        $cont=$inicio+1;
-		$num=count($cabecera);
-		$tam=100/$num;
-        $prir=0;
-        $segr=0;
-        $terr=0;
-        $cuar=0;
-        $quir=0;
-        $sexr=0;
-        $total=0;
-        for($j=$inicio;$j<$fin;$j++)
-		{
-			$t=explode('*', $datos[$j]);
-			
-            $this->RoundedRect(10, $ejeY, 258, 10, 2, 'D');
-            $this->CellFitSpace(8,10, $cont,0, 0 , 'C' );
-            $this->CellFitSpace(80,10, $t[0],'LR', 0 , 'L' );
-            $this->CellFitSpace(20,10, $t[1],0, 0 , 'L' );
-            for($i=0;$i<$num;$i++)
-			{
-				 $this->CellFitSpace($tam,10, $t[$i+2],'LR', 0 , 'C' );
-                 if($t[$i+2]=='X'){
-                    if($i==0)
-                        {$prir++;
-                            $total++;
-                        }
-                    if($i==1)
-                        {$segr++;
-                            $total++;
-                        }
-                    if($i==2)
-                        {$terr++;
-                            $total++;
-                        }
-                    if($i==3)
-                        {$cuar++;
-                            $total++;
-                        }
-                    if($i==4)
-                        {$quir++;
-                            $total++;
-                        }
-                    if($i==5)
-                        {$sexr++;
-                            $total++;
-                        }
-                 }
-			}
-            $this->CellFitSpace(50,10, 'Registro mediante sistema.',0, 0 , 'C');
+        $bandera = false; //Para alternar el relleno
+        $ejeY = 17; //Aquí se encuentra la primer CellFitSpace e irá incrementando
+        $letra = 'D'; //'D' Dibuja borde de cada CellFitSpace -- 'FD' Dibuja borde y rellena
+        foreach($datos as $fila)
+        {
+            //Por cada 3 CellFitSpace se crea un RoundedRect encimado
+            //El parámetro $letra de RoundedRect cambiará en cada iteración
+            //para colocar FD y D, la primera iteración es D
+            //Solo la celda de enmedio llevará bordes, izquierda y derecha
+            //Las celdas laterales colocarlas sin borde
+            $this->RoundedRect(10, $ejeY, 120, 6, 2, $letra);
+            //$this->CellFitSpace(40,7, utf8_decode($fila['id_user']),0, 0 , 'L' );
+            $this->CellFitSpace(40,6, utf8_decode($fila['nombre']),0, 0 , 'L' );
+            $this->CellFitSpace(40,6, utf8_decode($fila['nick']),'LR', 0 , 'L' );
+            $this->CellFitSpace(40,6, utf8_decode($fila['correo']),0, 0 , 'L' );
+ 
             $this->Ln();
-			$cont++;
-            $ejeY = $ejeY + 10;
-		}
-        /*$this->SetFont('Arial','B',10);
-        $this->CellFitSpace(108,10, 'TOTALES',0, 0 , 'C' );
-        $this->CellFitSpace($tam,10, $prir,0, 0 , 'R' );
-        $this->CellFitSpace($tam,10, $segr,0, 0 , 'R' );
-        $this->CellFitSpace($tam,10, $terr,0, 0 , 'R' );
-        $this->CellFitSpace($tam,10, $cuar,0, 0 , 'R' );
-        $this->CellFitSpace($tam,10, $quir,0, 0 , 'R' );
-        $this->CellFitSpace($tam,10, $sexr,0, 0 , 'R' );
-        $this->CellFitSpace(50,10, 'Total Gral: '.$total,0, 0 , 'R');*/
+            //Condición ternaria que cambia el valor de $letra
+            ($letra == 'D') ? $letra = 'FD' : $letra = 'D';
+            //Aumenta la siguiente posición de Y (recordar que X es fijo)
+            //Se suma 7 porque cada celda tiene esa altura
+            $ejeY = $ejeY + 6;
+        }
     }
  	function datosVertical($datos)
     {
-        $this->SetXY(70, 60); //40 = 10 posiciónX_anterior + 30ancho Celdas de cabecera
-        $this->SetFont('Arial','',10); //Fuente, Normal, tamaño
+        $this->SetXY(70, 50); //40 = 10 posiciónX_anterior + 30ancho Celdas de cabecera
+        $this->SetFont('Arial','',8); //Fuente, Normal, tamaño
         $this->SetFillColor(240, 240, 240); //Gris tenue de cada fila
         $this->SetTextColor(18, 20, 66); //Color del texto: Negro
-        $ejeY=60;
+        $ejeY=50;
         foreach($datos as $columna)
         {
-        	$this->RoundedRect(70, $ejeY, 120, 7, 2, 'FD');
-            $this->CellFitSpace(120,7, utf8_decode($columna),0, 2 , 'L' );
-			$ejeY = $ejeY + 7;
+        	$this->RoundedRect(70, $ejeY, 120, 6, 2, 'FD');
+            $this->CellFitSpace(120,6, utf8_decode($columna),0, 2 , 'L' );
+			$ejeY = $ejeY + 6;
         }
     }
 	function datosVertical2($datos)
     {
-        $this->SetXY(70, 135); //40 = 10 posiciónX_anterior + 30ancho Celdas de cabecera
-        $this->SetFont('Arial','',10); //Fuente, Normal, tamaño
+        $this->SetXY(70, 115); //40 = 10 posiciónX_anterior + 30ancho Celdas de cabecera
+        $this->SetFont('Arial','',8); //Fuente, Normal, tamaño
          $this->SetFillColor(240, 240, 240); //Gris tenue de cada fila
         $this->SetTextColor(18, 20, 66); //Color del texto: Negro
-        $ejeY=135;
+        $ejeY=115;
         foreach($datos as $columna)
         {
-        	$this->RoundedRect(70, $ejeY, 120, 7, 2, 'FD');
-            $this->CellFitSpace(80,7, utf8_decode($columna),0, 2 , 'L' );
-			$ejeY = $ejeY + 7;
+        	$this->RoundedRect(70, $ejeY, 120, 6, 2, 'FD');
+            $this->CellFitSpace(200,6, utf8_decode($columna),0, 2 , 'L' );
+			$ejeY = $ejeY + 6;
         }
     }
  
-    function tablaHorizontal($miCabecera,$terminos,$inicio,$fin)
+    function tablaHorizontal($cabeceraHorizontal, $datosHorizontal)
     {
-        $this->cabeceraHorizontal($miCabecera);
-        $this->datosHorizontal($terminos,$miCabecera,$inicio,$fin);
+        $this->cabeceraHorizontal($cabeceraHorizontal);
+        $this->datosHorizontal($datosHorizontal);
     }
 	function tablaVertical($cabeceraVertical, $datosVertical)
     {
@@ -305,41 +258,40 @@ class PDF extends FPDF
         $this->_out(sprintf('%.2f %.2f %.2f %.2f %.2f %.2f c ', $x1*$this->k, ($h-$y1)*$this->k,
             $x2*$this->k, ($h-$y2)*$this->k, $x3*$this->k, ($h-$y3)*$this->k));
     }
-	
 	function Header()
  
 	{
 	   
 	       // seteamos el tipo de letra Arial Negrita 16
-	    $this->SetFont('Arial','B',12);
+	  //  $this->SetFont('Arial','B',14);
 	 
 	    // ponemos una celda sin contenido para centrar el titulo o la celda del titulo a la derecha
-	    $this->Cell(70);
+	   // $this->Cell(35);
 	 
 	    // definimos la celda el titulo
-	    $this->CellFitSpace(120,20,'ENTREGA DE REFRIGERIOS',0,0,'C');
-		$this->Ln(5);
-		$this->SetFont('Arial','I',10);
-		$this->Cell(70);
-        $this->CellFitSpace(120,20,utf8_decode($this->titulo),0,0,'C');
+	   /* $this->CellFitSpace(120,20,'Formulario de Inscripción',0,0,'C');
+		$this->Ln(10);
+		$this->SetFont('Arial','B',12);
+		$this->Cell(35);
+	 	$this->CellFitSpace(120,20,utf8_decode('X Jornadas Bolivianas de Derecho Tributario 2017'),0,0,'C');
 	    // Salto de línea salta 20 lineas
-	    $this->Ln(10);
+	    $this->Ln(10);*/
 	 
 	}
-	 
+	
 	// utilizamos la funcion Footer() y la personalizamos para que muestre el pie de página
 	function Footer()
 	 
 	{
 	    // Seteamos la posicion de la proxima celda en forma fija a 1,5 cm del final de la pagina
 	 
-	    $this->SetY(-15);
+	  /*  $this->SetY(-15);
 	    // Seteamos el tipo de letra Arial italica 10
 	 
-	    $this->SetFont('Arial','I',8);
+	    $this->SetFont('Arial','I',10);
 	    // Número de página
 	 
-	    $this->Cell(0,8,'Página '.$this->PageNo().' de {nb}   - - - -   Impreso el ' . date('d/m/Y') . ' a las ' . date('H:i:s') . ' hora del servidor','T',0,'C');
+	    $this->Cell(0,10,utf8_decode('Página ').$this->PageNo().' de {nb}   - - - -   Impreso el ' . date('d/m/Y') . ' a las ' . date('H:i:s') . ' hora del servidor','T',0,'C');*/
 	}
 } // FIN Class PDF
 

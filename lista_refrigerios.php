@@ -62,7 +62,18 @@ if ($numregistros == 0) {
 		}
 		$control++;
 	}
-	$pdf->Cell(250, 10, 'TOTAL REFRIGERIOS ENTREGADOS: 18/10/2023 (M): ' . contararefrigerios($terminos,2).' 18/10/2023 (T): ' . contararefrigerios($terminos,3).' 19/10/2023 (M): ' . contararefrigerios($terminos,4).' 19/10/2023 (T): ' . contararefrigerios($terminos,5).' 20/10/2023 (M): ' . contararefrigerios($terminos,6).' 20/10/2023 (T): ' . contararefrigerios($terminos,7), 0, 0, 'R');
+    $num=count($valores);
+		$tam=100/$num;
+    $pdf->SetFont('Arial','B',10);
+    $pdf->CellFitSpace(108,10, 'TOTALES',0, 0 , 'C' );
+    $pdf->CellFitSpace($tam,10, contararefrigerios($terminos,2),0, 0 , 'R' );
+    $pdf->CellFitSpace($tam,10, contararefrigerios($terminos,3),0, 0 , 'R' );
+    $pdf->CellFitSpace($tam,10, contararefrigerios($terminos,4),0, 0 , 'R' );
+    $pdf->CellFitSpace($tam,10, contararefrigerios($terminos,5),0, 0 , 'R' );
+    $pdf->CellFitSpace($tam,10, contararefrigerios($terminos,6),0, 0 , 'R' );
+    $pdf->CellFitSpace($tam,10, contararefrigerios($terminos,7),0, 0 , 'R' );
+    //$total=contararefrigerios($terminos,2)+contararefrigerios($terminos,3)+contararefrigerios($terminos,4)+contararefrigerios($terminos,5)+contararefrigerios($terminos,6)+contararefrigerios($terminos,2);
+	//$pdf->Cell(250, 10, 'TOTAL REFRIGERIOS ENTREGADOS: 18/10/2023 (M): ' . contararefrigerios($terminos,2).' 18/10/2023 (T): ' . contararefrigerios($terminos,3).' 19/10/2023 (M): ' . contararefrigerios($terminos,4).' 19/10/2023 (T): ' . contararefrigerios($terminos,5).' 20/10/2023 (M): ' . contararefrigerios($terminos,6).' 20/10/2023 (T): ' . contararefrigerios($terminos,7), 0, 0, 'R');
 }
 
 $nom = "ListaEntregaRefrigerios" . $gestion . ".pdf";

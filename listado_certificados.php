@@ -35,16 +35,8 @@ ini_set('max_execution_time', 900);
 						$pdf->Ln(15);
 		
 						$qr='http://chart.googleapis.com/chart?chs=50x50&cht=qr&chl=IDInscrito.'.$row[1].'.CodigoInscripcion.'.$row[2].'.NroCertificado.'.valida_correlativo($row[3]).'.Nombre.'.str_replace(' ','_',$row[0]).'&.png';
-						//$pdf->Image($qr,30,190,30,30);
-						//$pdf->Image($qr,219,173,30,30);--anterior
 						$pdf->Image($qr,250,15,30,30);
-		
-						//$pdf->Ln(60);
 						$pdf->SetFont('Helvetica','B',16);
-						//$pdf->SetXY(230, 190);
-						
-						//$pdf->CellFitSpace(20,10,'Nro.: '.valida_correlativo($cont),0,0,'C'); 
-						//$pdf->Text(220,205,'Nro.: '.valida_correlativo($cont));   --para tener correlativo secuencial
 						$pdf->Text(250,47,'Nro.: '.valida_correlativo($row[3]));
 						
 	                  }

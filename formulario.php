@@ -2,6 +2,7 @@
 <?php
 	//header("Content-Type: text/html; charset=iso-8859-1 ");
 	//include_once 'conexion.php';
+	date_default_timezone_set('America/La_Paz');
 	include_once 'includes/funj.php';
 	include_once 'PDF.php';
 	$ci=base64_decode($_GET["c1"]);
@@ -23,11 +24,6 @@
 			return '0'.$correlativo;
 		}
 	}
-	/*foreach ($valores as $key) {
-		echo $key."<br>";
-	}
-	ECHO $terminos; */
-
 	$pdf = new PDF('P','mm','Letter');
 	
 	$pdf->SetTitle(utf8_decode('Formulario de Inscripción').' Nro. '.valida_correlativo($correlativo));

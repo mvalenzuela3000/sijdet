@@ -98,7 +98,7 @@ class PDF extends FPDF
 					$this->CellFitSpace($tam,10, '','LR', 0 , 'C' );
 				}
 			}
-            $this->CellFitSpace(50,7, 'Registro mediante sistema.',0, 0 , 'C');
+            $this->CellFitSpace(50,10, 'Registro mediante sistema.',0, 0 , 'C');
             $this->Ln();
 			$cont++;
             $ejeY = $ejeY + 10;
